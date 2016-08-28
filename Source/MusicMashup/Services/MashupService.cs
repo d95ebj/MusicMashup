@@ -24,8 +24,9 @@ namespace MusicMashup.Services
         }
         public async Task<MashupMusicData> GetMashupData(string mbid)
         {
-            var mashup = _musicInfoProvider.GetMusicData(mbid);
-            mashup.Mbid = mbid;
+            var mashup = new MashupMusicData{Mbid = mbid};
+            mashup.Albums = await _musicInfoProvider.GetAlbums(mbid);
+        
            
            await _coverArtProvider.GetCoverArt(mashup.Albums);
 

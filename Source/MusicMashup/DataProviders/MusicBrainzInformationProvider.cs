@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Web;
+using System.Threading.Tasks;
+using MusicMashup.DataProviders.MusicBrainz;
 using MusicMashup.Models;
-using Newtonsoft.Json;
 
 namespace MusicMashup.DataProviders
 {
     public interface IMusicInformationProvider
     {
-        MashupMusicData GetMusicData(string mbid);
+        Task<IEnumerable<Album>> GetAlbums(string mbid);
+        Task<string> GetWikipediaTitle(string mbid);
     }
     public class MusicBrainzInformationProvider : IMusicInformationProvider
     {
@@ -20,22 +19,20 @@ namespace MusicMashup.DataProviders
         {
             _proxy = proxy;
         }
-        public MashupMusicData GetMusicData(string mbid)
-        {
-            var musicBrainzData = _proxy.GetMusicData(mbid);
-            return MapToMashupMusicData(musicBrainzData);
 
+        public async Task<IEnumerable<Album>> GetAlbums(string mbid)
+        {
+            var releaseGroups = await _proxy.GetReleaseGroups(mbid);
+            return releaseGroups.Where(rg => rg.Type == "Album").Select(rg => new Album { Title = rg.Title, Mbid = rg.Id }).ToList();
         }
 
-        private MashupMusicData MapToMashupMusicData(MusicBrainzData musicBrainzData)
+        public async Task<string> GetWikipediaTitle(string mbid)
         {
-            var mashup = new MashupMusicData();
-
-            mashup.Albums = musicBrainzData.ReleaseGroups.Where(rg => rg.Type == "Album").Select(rg => new Album { Title = rg.Title, Mbid = rg.Id }).ToList();
-
-           return mashup;
+            var urlRelations = await _proxy.GetUrlRelations(mbid);
+           return  urlRelations.FirstOrDefault(r => r.Type == "Wikipedia")?.Url.Resource;
         }
+
+
     }
-
-   
+  
 }

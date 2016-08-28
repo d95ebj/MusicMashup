@@ -9,7 +9,7 @@ namespace MusicMashup.Models
     {
         public string Mbid { get; set; }
         public string ArtistInformation { get; set; }
-        public List<Album> Albums { get; set; }
+        public IEnumerable<Album> Albums { get; set; }
         
     }
 

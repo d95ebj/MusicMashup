@@ -17,6 +17,7 @@
 
 using MusicMashup.DataProviders;
 using MusicMashup.DataProviders.CoverArtArchive;
+using MusicMashup.DataProviders.MusicBrainz;
 
 namespace MusicMashup.DependencyResolution {
     using StructureMap.Configuration.DSL;

@@ -1,19 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
+using MusicMashup.DataProviders.Wikipedia;
 
 namespace MusicMashup.DataProviders
 {
     public interface IArtistInformationProvider
     {
-        string GetArtistDescription(string artist);
+        Task<string> GetArtistDescription(string artist);
     }
     public class WikipediaArtistInformationProvider : IArtistInformationProvider
     {
-        public string GetArtistDescription(string artist)
+        private readonly IWikipediaProxy _proxy;
+
+        public WikipediaArtistInformationProvider(IWikipediaProxy proxy)
         {
-            throw new NotImplementedException();
+            _proxy = proxy;
+        }
+        public async Task<string> GetArtistDescription(string artist)
+        {
+            return await _proxy.GetDescription(artist);
         }
     }
 }
