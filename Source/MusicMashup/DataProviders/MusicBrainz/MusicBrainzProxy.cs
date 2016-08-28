@@ -15,26 +15,33 @@ namespace MusicMashup.DataProviders.MusicBrainz
     {
         private async Task<MusicBrainzData> GetMusicData(string mbid, string inc)
         {
-            var url = "http://musicbrainz.org/ws/2/artist/" + mbid + "?inc=release-groups" + inc; //todo: move to config
-            using (var client = new WebClient())
+            try
             {
-                client.Headers.Add("user-agent", "MusicMashup (ebj@ljusberg.se)");
-                client.Headers.Add("accept", "application/json");
-                var jSonString = await client.DownloadStringTaskAsync(url);
-                return JsonConvert.DeserializeObject<MusicBrainzData>(jSonString);    
+                var url = "http://musicbrainz.org/ws/2/artist/" + mbid + "?inc=" + inc; //todo: move to config
+                using (var client = new WebClient())
+                {
+                    client.Headers.Add("user-agent", "MusicMashup (ebj@ljusberg.se)");
+                    client.Headers.Add("accept", "application/json");
+                    var jSonString = await client.DownloadStringTaskAsync(url);
+                    return JsonConvert.DeserializeObject<MusicBrainzData>(jSonString);
+                }
+            }
+            catch (WebException e)
+            {
+                return null;
             }
         }
 
         public async Task<IEnumerable<ReleaseGroup>> GetReleaseGroups(string mbid)
         {
-            var musicData = await GetMusicData(mbid, "release-group");
-            return musicData.ReleaseGroups;
+            var musicData = await GetMusicData(mbid, "release-groups");
+            return musicData?.ReleaseGroups;
         }
 
         public async Task<IEnumerable<Relation>> GetUrlRelations(string mbid)
         {
             var musicData = await GetMusicData(mbid, "url-rels");
-            return musicData.Relations;
+            return musicData?.Relations;
         }
     }
 

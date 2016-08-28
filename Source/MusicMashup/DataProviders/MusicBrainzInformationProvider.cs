@@ -29,9 +29,15 @@ namespace MusicMashup.DataProviders
         public async Task<string> GetWikipediaTitle(string mbid)
         {
             var urlRelations = await _proxy.GetUrlRelations(mbid);
-           return  urlRelations.FirstOrDefault(r => r.Type == "Wikipedia")?.Url.Resource;
+            var resource = urlRelations.FirstOrDefault(r => r.Type == "wikipedia")?.Url.Resource;
+            
+            if(resource != null)
+            {
+                var index = resource.LastIndexOf('/');
+                return resource.Substring(index + 1);
+            }
+            return null;
         }
-
 
     }
   

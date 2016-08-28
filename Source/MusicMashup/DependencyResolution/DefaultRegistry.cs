@@ -18,6 +18,7 @@
 using MusicMashup.DataProviders;
 using MusicMashup.DataProviders.CoverArtArchive;
 using MusicMashup.DataProviders.MusicBrainz;
+using MusicMashup.DataProviders.Wikipedia;
 
 namespace MusicMashup.DependencyResolution {
     using StructureMap.Configuration.DSL;
@@ -30,8 +31,9 @@ namespace MusicMashup.DependencyResolution {
           For<IMusicInformationProvider>().Use<MusicBrainzInformationProvider>();
             For<IMusicBrainzProxy>().Use<MusicBrainzProxy>();
             For<IArtistInformationProvider>().Use<WikipediaArtistInformationProvider>();
+            For<IWikipediaProxy>().Use<WikipediaProxy>();
             For<ICoverArtInformationProvider>().Use<CoverArtArchiveInformationProvider>();
-            For<ICoverArtArchiveProxy>().Use<CoverArtArchiveProxy>();
+            For<ICoverArtArchiveProxy>().Use<CoverArtArchiveProxy>();    
         }
 
         #endregion

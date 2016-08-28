@@ -22,15 +22,29 @@ namespace MusicMashup.Services
             _coverArtProvider = coverArtProvider;
             _artistInfoProvider = artistInfoProvider;
         }
+
         public async Task<MashupMusicData> GetMashupData(string mbid)
         {
-            var mashup = new MashupMusicData{Mbid = mbid};
-            mashup.Albums = await _musicInfoProvider.GetAlbums(mbid);
-        
-           
-           await _coverArtProvider.GetCoverArt(mashup.Albums);
+            var mashup = new MashupMusicData {Mbid = mbid};
+
+            var albumTask = GetAlbums(mashup);
+            var titleTask = GetArtistDescription(mashup);
+
+            await Task.WhenAll(albumTask, titleTask);
 
             return mashup;
+        }
+
+        private async Task GetAlbums(MashupMusicData mashUp)
+        {
+            mashUp.Albums = await _musicInfoProvider.GetAlbums(mashUp.Mbid);
+            await _coverArtProvider.GetCoverArt(mashUp.Albums);
+        }
+
+        private async Task GetArtistDescription(MashupMusicData mashUp)
+        {
+            var wikiName = await _musicInfoProvider.GetWikipediaTitle(mashUp.Mbid);
+            mashUp.ArtistInformation = await _artistInfoProvider.GetArtistDescription(wikiName);
         }
     }
 }
