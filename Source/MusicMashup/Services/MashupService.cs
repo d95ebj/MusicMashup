@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using MusicMashup.DataProviders;
 using MusicMashup.DataProviders.CoverArtArchive;
+using MusicMashup.DataProviders.MusicBrainz;
 using MusicMashup.Models;
 
 namespace MusicMashup.Services
@@ -27,14 +28,17 @@ namespace MusicMashup.Services
         {
             var mashup = new MashupMusicData {Mbid = mbid};
 
+            //Make parallel calls to get albums with coverart and artist description  
             var albumTask = GetAlbums(mashup);
-            var titleTask = GetArtistDescription(mashup);
+            var artistTask = GetArtistDescription(mashup);
 
-            await Task.WhenAll(albumTask, titleTask);
+            await Task.WhenAll(albumTask, artistTask);
 
             return mashup;
+
         }
 
+        //Populates the MashupMusicData.Album property with a list of albums and their corresponding cover art
         private async Task GetAlbums(MashupMusicData mashUp)
         {
             mashUp.Albums = await _musicInfoProvider.GetAlbums(mashUp.Mbid);
@@ -43,11 +47,12 @@ namespace MusicMashup.Services
             
         }
 
+        //Populates the MashupMusicData.ArtistDescription property 
         private async Task GetArtistDescription(MashupMusicData mashUp)
         {
             var wikiName = await _musicInfoProvider.GetWikipediaTitle(mashUp.Mbid);
             if (wikiName != null)
-                mashUp.ArtistInformation = await _artistInfoProvider.GetArtistDescription(wikiName);
+                mashUp.ArtistDescription = await _artistInfoProvider.GetArtistDescription(wikiName);
         }
     }
 }

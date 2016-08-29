@@ -20,12 +20,16 @@ namespace MusicMashup.DataProviders
             _proxy = proxy;
         }
 
+        //Gets a list of all albums connected to the mbid
         public async Task<IEnumerable<Album>> GetAlbums(string mbid)
         {
             var releaseGroups = await _proxy.GetReleaseGroups(mbid);
-            return releaseGroups.Where(rg => rg.Type == "Album").Select(rg => new Album { Title = rg.Title, Mbid = rg.Id }).ToList();
+            return releaseGroups.Where(rg => rg.Type == "Album")
+                    .Select(rg => new Album {Title = rg.Title, Mbid = rg.Id})
+                    .ToList();
         }
 
+        //Gets the string that can be used to get information from wikipedia correponding to the mbid
         public async Task<string> GetWikipediaTitle(string mbid)
         {
             var urlRelations = await _proxy.GetUrlRelations(mbid);

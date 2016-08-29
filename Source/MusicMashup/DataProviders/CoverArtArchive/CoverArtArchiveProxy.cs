@@ -36,7 +36,7 @@ namespace MusicMashup.DataProviders.CoverArtArchive
                 //return the url to the first image marked as Front or if no image is marked as Front the url to the first image.
                 return (images.FirstOrDefault(i => i.Types.Contains("Front")) ?? images.First()).ImageUrl;
             }
-            catch (WebException e)
+            catch (WebException)
             {
                 return null;
             }

@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
-using MusicMashup.DataProviders.MusicBrainz;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -28,7 +26,7 @@ namespace MusicMashup.DataProviders.Wikipedia
 
                 }
             }
-            catch (WebException e)
+            catch (WebException)
             {
                 return null;
             }

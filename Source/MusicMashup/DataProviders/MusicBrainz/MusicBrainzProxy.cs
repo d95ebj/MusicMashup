@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -8,7 +9,7 @@ namespace MusicMashup.DataProviders.MusicBrainz
     public interface IMusicBrainzProxy
     {
         Task<IEnumerable<ReleaseGroup>> GetReleaseGroups(string mbid);
-       Task<IEnumerable<Relation>> GetUrlRelations(string mbid);
+        Task<IEnumerable<Relation>> GetUrlRelations(string mbid);
     }
 
     public class MusicBrainzProxy : IMusicBrainzProxy
@@ -28,22 +29,52 @@ namespace MusicMashup.DataProviders.MusicBrainz
             }
             catch (WebException e)
             {
-                return null;
+                if (((HttpWebResponse) e.Response)?.StatusCode == HttpStatusCode.NotFound)
+                {
+                    throw new MusicBrainzException(MusicBrainzException.Error.NotFound);
+                }
+                if (((HttpWebResponse)e.Response)?.StatusCode == HttpStatusCode.BadRequest)
+                {
+                    throw new MusicBrainzException(MusicBrainzException.Error.BadRequest);
+                }
+                throw;
             }
         }
 
         public async Task<IEnumerable<ReleaseGroup>> GetReleaseGroups(string mbid)
         {
             var musicData = await GetMusicData(mbid, "release-groups");
-            return musicData?.ReleaseGroups;
+            return musicData.ReleaseGroups;
         }
 
         public async Task<IEnumerable<Relation>> GetUrlRelations(string mbid)
         {
             var musicData = await GetMusicData(mbid, "url-rels");
-            return musicData?.Relations;
+            return musicData.Relations;
         }
     }
 
-    
+   
+    public class MusicBrainzException : Exception
+    {
+        public Error Code { get; }
+        public MusicBrainzException(Error code)
+        {
+            Code = code;
+        }
+
+        public MusicBrainzException(string message, Error code) : base(message)
+        {
+            Code = code;
+        }
+
+        public enum Error
+        {
+            NotFound,
+            BadRequest
+        }
+    }
+
+   
+
 }

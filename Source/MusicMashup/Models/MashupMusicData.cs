@@ -8,7 +8,7 @@ namespace MusicMashup.Models
     public class MashupMusicData
     {
         public string Mbid { get; set; }
-        public string ArtistInformation { get; set; }
+        public string ArtistDescription { get; set; }
         public IEnumerable<Album> Albums { get; set; }
         
     }
@@ -17,7 +17,6 @@ namespace MusicMashup.Models
     {
         public string Title { get; set; }
         public string CoverArt { get; set; }
-
         public string Mbid { get; set; }
     }
 }
