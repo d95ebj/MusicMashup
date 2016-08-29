@@ -162,7 +162,9 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MashupController.cs" />
     <Compile Include="DataProviders\CoverArtArchive\CoverArtArchiveProxy.cs" />
+    <Compile Include="DataProviders\CoverArtArchive\CoverArtData.cs" />
     <Compile Include="DataProviders\CoverArtInformationProvider.cs" />
+    <Compile Include="DataProviders\MusicBrainz\MusicBrainzData.cs" />
     <Compile Include="DataProviders\MusicBrainz\MusicBrainzProxy.cs" />
     <Compile Include="DataProviders\MusicBrainzInformationProvider.cs" />
     <Compile Include="DataProviders\WikipediaArtistInformationProvider.cs" />

@@ -20,6 +20,7 @@ namespace MusicMashup.DataProviders
         }
         public async Task GetCoverArt(IEnumerable<Album> albums)
         {
+            //make parallel async calls to coverart archive for each album
             var tasks = albums.Select(a => Task.Run(async () => { a.CoverArt = await _proxy.GetCoverArt(a.Mbid); }));
 
             await Task.WhenAll(tasks.ToArray());

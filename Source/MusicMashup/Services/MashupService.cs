@@ -38,13 +38,16 @@ namespace MusicMashup.Services
         private async Task GetAlbums(MashupMusicData mashUp)
         {
             mashUp.Albums = await _musicInfoProvider.GetAlbums(mashUp.Mbid);
-            await _coverArtProvider.GetCoverArt(mashUp.Albums);
+            if (mashUp.Albums != null) 
+                await _coverArtProvider.GetCoverArt(mashUp.Albums);
+            
         }
 
         private async Task GetArtistDescription(MashupMusicData mashUp)
         {
             var wikiName = await _musicInfoProvider.GetWikipediaTitle(mashUp.Mbid);
-            mashUp.ArtistInformation = await _artistInfoProvider.GetArtistDescription(wikiName);
+            if (wikiName != null)
+                mashUp.ArtistInformation = await _artistInfoProvider.GetArtistDescription(wikiName);
         }
     }
 }

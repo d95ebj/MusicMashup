@@ -22,7 +22,7 @@ namespace MusicMashup.DataProviders.CoverArtArchive
             try
             {
                 var url = "http://coverartarchive.org/release-group/" + mbid; //todo: move to config
-                var images = new List<ImageData>(); 
+                var images = new List<CoverArtData>(); 
                 using (var client = new WebClient())
                 {
                     var getStringTask = client.DownloadStringTaskAsync(url);
@@ -42,14 +42,4 @@ namespace MusicMashup.DataProviders.CoverArtArchive
             }
         }
     }
-
-    public class ImageData
-    {
-        [JsonProperty(PropertyName = "image")]
-        public string ImageUrl { get; set; }
-
-        [JsonProperty(PropertyName = "types")]
-        public string[] Types { get; set; }
-    }
-
 }
